@@ -1,0 +1,4 @@
+<?jelly escape-by-default='true'?>
+<div>
+    Extension of jobcacher plugin that add JFrog artifactory for item storage.
+</div>
