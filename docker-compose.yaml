@@ -1,0 +1,42 @@
+version: "3.9"
+services:
+
+  wiremock:
+    image: wiremock/wiremock:3.4.2
+    container_name: wiremock
+    restart: always
+    ports:
+      - "8181:8080"
+    deploy:
+        resources:
+            limits:
+              cpus: "0.5"
+              memory: 512m
+            reservations:
+              cpus: "0.5"
+              memory: 256m
+
+  artifactory:
+    image: releases-docker.jfrog.io/jfrog/artifactory-oss:latest
+    container_name: artifactory
+    restart: always
+    ports:
+      - "8046:8046"
+      - "8081:8081"
+      - "8082:8082"
+      - "8086:8086"
+      - "8070:8070"
+    volumes:
+      - artifactory:/var/opt/jfrog/artifactory
+    deploy:
+        resources:
+            limits:
+              cpus: "1"
+              memory: 1500m
+            reservations:
+              cpus: "0.5"
+              memory: 1024m
+
+volumes:
+    artifactory:
+        driver: local

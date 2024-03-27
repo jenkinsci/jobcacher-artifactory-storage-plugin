@@ -1,26 +1,36 @@
-# jobcacher-artifactory-storage-plugin
+# Jobcacher Artifactory storage Extension plugin
+
+> [!NOTE]
+> This plugin is maintained by the Jenkins Community and not by JFrog.
+
+<p align="center">
+  <img src="docs/artifactory_logo.png">
+</p>
 
 ## Introduction
 
-TODO Describe what your plugin does here
-
 ## Getting started
 
-TODO Tell users how to configure your plugin here, include screenshots, pipeline examples and 
-configuration-as-code examples.
+See [jobcacher-plugin](https://plugins.jenkins.io/jobcacher/) for usage.
 
-## Issues
+You only need to configure the extension to use Artifactory under System Configuration.
 
-TODO Decide where you're going to host your issues, the default is Jenkins JIRA, but you can also enable GitHub issues,
-If you use GitHub issues there's no need for this section; else add the following line:
+## Configuration as Code
 
-Report issues and enhancements in the [Jenkins issue tracker](https://issues.jenkins.io/).
+```yaml
+unclassified:
+  globalItemStorage:
+    storage:
+      artifactory:
+        prefix: "jenkins/"
+        repository: "my-generic-repo"
+        serverUrl: "http://localhost:7000"
+        storageCredentialId: "the-credentials-id"
+```
 
-## Contributing
+## CONTRIBUTING
 
-TODO review the default [CONTRIBUTING](https://github.com/jenkinsci/.github/blob/master/CONTRIBUTING.md) file and make sure it is appropriate for your plugin, if not then add your own one adapted from the base file
-
-Refer to our [contribution guidelines](https://github.com/jenkinsci/.github/blob/master/CONTRIBUTING.md)
+See [CONTRIBUTING](CONTRIBUTING.md)
 
 ## LICENSE
 
