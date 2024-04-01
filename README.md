@@ -1,6 +1,6 @@
 # Jobcacher Artifactory storage Extension plugin
 
-This plugin is an extension of the [jobcacher-plugin](https://plugins.jenkins.io/jobcacher/) that allows you to store the cache in JFrog Artifactory.
+This plugin is an extension of the [jobcacher-plugin](https://plugins.jenkins.io/jobcacher/) that allows you to store the caches in JFrog Artifactory generic repository.
 
 > [!NOTE]
 > This plugin is maintained by the Jenkins Community and not by JFrog.
