@@ -7,15 +7,18 @@ import com.cloudbees.plugins.credentials.common.StandardUsernameCredentials;
 import hudson.Extension;
 import hudson.ExtensionList;
 import hudson.model.Item;
+import hudson.model.listeners.ItemListener;
 import hudson.security.ACL;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
+import java.io.File;
 import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.regex.Pattern;
 import jenkins.model.Jenkins;
+import jenkins.plugins.itemstorage.GlobalItemStorage;
 import jenkins.plugins.itemstorage.ItemStorage;
 import jenkins.plugins.itemstorage.ItemStorageDescriptor;
 import net.sf.json.JSONObject;
@@ -25,6 +28,7 @@ import org.kohsuke.stapler.interceptor.RequirePOST;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Extension
 public class ArtifactoryItemStorage extends ItemStorage<ArtifactoryItemPath> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -81,12 +85,36 @@ public class ArtifactoryItemStorage extends ItemStorage<ArtifactoryItemPath> imp
 
     @Override
     public ArtifactoryItemPath getObjectPath(Item item, String path) {
-        return null;
+        return new ArtifactoryItemPath(
+                createArtifactoryClient(), String.format("%s/%s", prefix, item.getFullName()), path);
     }
 
     @Override
     public ArtifactoryItemPath getObjectPathForBranch(Item item, String path, String branch) {
-        return null;
+        String branchPath = new File(item.getFullName()).getParent() + "/" + branch;
+        return new ArtifactoryItemPath(createArtifactoryClient(), String.format("%s/%s", prefix, branchPath), path);
+    }
+
+    public void deletePath(String path) {
+        try (ArtifactoryClient client = createArtifactoryClient()) {
+            client.deleteArtifact(String.format("%s/%s", prefix, path));
+        } catch (Exception e) {
+            LOGGER.error(String.format("Failed to delete path at %s", path), e);
+        }
+    }
+
+    public void movePath(String fromPath, String toPath) {
+        try (ArtifactoryClient client = createArtifactoryClient()) {
+            client.move(String.format("%s/%s", prefix, fromPath), String.format("%s/%s", prefix, toPath));
+        } catch (Exception e) {
+            LOGGER.error(String.format("Failed to move path from %s to %s", fromPath, toPath), e);
+        }
+    }
+
+    private ArtifactoryClient createArtifactoryClient() {
+        LOGGER.info(serverUrl);
+        LOGGER.info(repository);
+        return new ArtifactoryClient(serverUrl, repository, Utils.getCredentials(storageCredentialId));
     }
 
     public static ArtifactoryItemStorage get() {
@@ -136,7 +164,6 @@ public class ArtifactoryItemStorage extends ItemStorage<ArtifactoryItemPath> imp
             if (StringUtils.isBlank(repository)) {
                 ret = FormValidation.error("Repository cannot be blank");
             }
-            //
             return ret;
         }
 
@@ -187,6 +214,37 @@ public class ArtifactoryItemStorage extends ItemStorage<ArtifactoryItemPath> imp
             }
 
             return FormValidation.ok("Success");
+        }
+    }
+
+    @Extension
+    public static final class ArtifactoryItemListener extends ItemListener {
+
+        @Override
+        public void onDeleted(Item item) {
+            ArtifactoryItemStorage artifactoryItemStorage = lookupArtifactoryStorage();
+            if (artifactoryItemStorage == null) {
+                return;
+            }
+            artifactoryItemStorage.deletePath(item.getFullName());
+        }
+
+        @Override
+        public void onLocationChanged(Item item, String oldFullName, String newFullName) {
+            ArtifactoryItemStorage artifactoryItemStorage = lookupArtifactoryStorage();
+            if (artifactoryItemStorage == null) {
+                return;
+            }
+            artifactoryItemStorage.movePath(oldFullName, newFullName);
+        }
+
+        private ArtifactoryItemStorage lookupArtifactoryStorage() {
+            ItemStorage<?> storage = GlobalItemStorage.get().getStorage();
+            if (storage instanceof ArtifactoryItemStorage) {
+                return (ArtifactoryItemStorage) storage;
+            } else {
+                return null;
+            }
         }
     }
 }
