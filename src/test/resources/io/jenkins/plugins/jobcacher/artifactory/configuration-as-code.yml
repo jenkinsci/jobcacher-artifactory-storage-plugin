@@ -1,0 +1,8 @@
+unclassified:
+  globalItemStorage:
+    storage:
+      artifactory:
+        prefix: "jenkins/"
+        repository: "my-generic-repo"
+        serverUrl: "http://localhost:7000"
+        storageCredentialId: "the-credentials-id"
