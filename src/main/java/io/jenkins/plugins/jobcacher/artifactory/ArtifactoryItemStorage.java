@@ -97,7 +97,9 @@ public class ArtifactoryItemStorage extends ItemStorage<ArtifactoryItemPath> imp
 
     public void deletePath(String path) {
         try (ArtifactoryClient client = createArtifactoryClient()) {
-            client.deleteArtifact(String.format("%s/%s", prefix, path));
+            if (client.isFolder(String.format("%s/%s", prefix, path))) {
+                client.deleteArtifact(String.format("%s/%s", prefix, path));
+            }
         } catch (Exception e) {
             LOGGER.error(String.format("Failed to delete path at %s", path), e);
         }
@@ -105,15 +107,15 @@ public class ArtifactoryItemStorage extends ItemStorage<ArtifactoryItemPath> imp
 
     public void movePath(String fromPath, String toPath) {
         try (ArtifactoryClient client = createArtifactoryClient()) {
-            client.move(String.format("%s/%s", prefix, fromPath), String.format("%s/%s", prefix, toPath));
+            if (client.isFolder(String.format("%s/%s", prefix, fromPath))) {
+                client.move(String.format("%s/%s", prefix, fromPath), String.format("%s/%s", prefix, toPath));
+            }
         } catch (Exception e) {
             LOGGER.error(String.format("Failed to move path from %s to %s", fromPath, toPath), e);
         }
     }
 
     private ArtifactoryClient createArtifactoryClient() {
-        LOGGER.info(serverUrl);
-        LOGGER.info(repository);
         return new ArtifactoryClient(serverUrl, repository, Utils.getCredentials(storageCredentialId));
     }
 
