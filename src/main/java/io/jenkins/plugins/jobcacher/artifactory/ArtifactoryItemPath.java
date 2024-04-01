@@ -22,6 +22,18 @@ public class ArtifactoryItemPath extends ObjectPath {
         this.path = path;
     }
 
+    public ArtifactoryClient getClient() {
+        return client;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
     @Override
     public ArtifactoryItemPath child(String childPath) throws IOException, InterruptedException {
         return new ArtifactoryItemPath(client, fullName, String.format("%s/%s", path, childPath));
