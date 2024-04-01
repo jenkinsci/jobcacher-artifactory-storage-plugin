@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:c="/lib/credentials">
+    <f:section title="${%Access_setting_title}">
+        <f:entry title="${%Credentials_title}" field="storageCredentialId">
+            <c:select expressionAllowed="false"/>
+        </f:entry>
+        <f:entry title="${%ServerUrl_name_title}" field="serverUrl">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="${%Repository_name_title}" field="repository">
+            <f:textbox/>
+        </f:entry>
+        <f:entry title="${%Prefix_title}" field="prefix">
+            <f:textbox/>
+        </f:entry>
+        <f:validateButton title="Validate Artifactory configuration" progress="Validate..." method="validateArtifactoryConfig"
+                          with="prefix,serverUrl,storageCredentialId,repository"/>
+    </f:section>
+</j:jelly>
