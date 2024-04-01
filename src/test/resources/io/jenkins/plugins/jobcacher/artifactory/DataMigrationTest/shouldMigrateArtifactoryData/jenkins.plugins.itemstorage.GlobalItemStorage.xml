@@ -1,0 +1,9 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<jenkins.plugins.itemstorage.GlobalItemStorage plugin="jobcacher@999999-SNAPSHOT">
+  <storage class="io.jenkins.plugins.jobcacher.artifactory.ArtifactoryItemStorage">
+    <prefix>the-prefix/</prefix>
+    <serverUrl>http://localhost:9000</serverUrl>
+    <repository>the-repo</repository>
+    <storageCredentialId>artifactory</storageCredentialId>
+  </storage>
+</jenkins.plugins.itemstorage.GlobalItemStorage>
