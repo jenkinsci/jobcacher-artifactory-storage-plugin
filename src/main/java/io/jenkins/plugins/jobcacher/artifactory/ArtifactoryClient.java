@@ -34,6 +34,10 @@ public class ArtifactoryClient implements AutoCloseable {
         this(config.getServerUrl(), config.getRepository(), config.getCredentials());
     }
 
+    public ArtifactoryConfig getConfig() {
+        return config;
+    }
+
     /**
      * Upload an artifact to the repository
      * @param file the file to upload
