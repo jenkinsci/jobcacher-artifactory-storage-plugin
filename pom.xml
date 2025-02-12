@@ -65,7 +65,7 @@
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>jobcacher</artifactId>
-      <version>589.v10419b_45a_a_72</version>
+      <version>638.v0916a_e35260c</version>
     </dependency>
     <dependency>
       <groupId>org.jenkins-ci.plugins</groupId>
