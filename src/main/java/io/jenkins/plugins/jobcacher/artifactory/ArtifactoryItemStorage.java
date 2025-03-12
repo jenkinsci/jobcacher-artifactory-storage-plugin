@@ -22,7 +22,6 @@ import jenkins.plugins.itemstorage.GlobalItemStorage;
 import jenkins.plugins.itemstorage.ItemStorage;
 import jenkins.plugins.itemstorage.ItemStorageDescriptor;
 import net.sf.json.JSONObject;
-import org.apache.commons.lang3.StringUtils;
 import org.kohsuke.stapler.*;
 import org.kohsuke.stapler.interceptor.RequirePOST;
 import org.slf4j.Logger;
@@ -163,7 +162,7 @@ public class ArtifactoryItemStorage extends ItemStorage<ArtifactoryItemPath> imp
         public FormValidation doCheckRepository(@QueryParameter String repository) {
             Jenkins.get().checkPermission(Jenkins.ADMINISTER);
             FormValidation ret = FormValidation.ok();
-            if (StringUtils.isBlank(repository)) {
+            if (repository == null || repository.isBlank()) {
                 ret = FormValidation.error("Repository cannot be blank");
             }
             return ret;
@@ -173,7 +172,7 @@ public class ArtifactoryItemStorage extends ItemStorage<ArtifactoryItemPath> imp
         public FormValidation doCheckServerUrl(@QueryParameter String serverUrl) {
             Jenkins.get().checkPermission(Jenkins.ADMINISTER);
             FormValidation ret = FormValidation.ok();
-            if (StringUtils.isBlank(serverUrl)) {
+            if (serverUrl == null || serverUrl.isBlank()) {
                 ret = FormValidation.error("Server url cannot be blank");
             } else if (!endPointPattern.matcher(serverUrl).matches()) {
                 ret = FormValidation.error("Server url doesn't seem valid. Should start with http:// or https://");
@@ -190,9 +189,12 @@ public class ArtifactoryItemStorage extends ItemStorage<ArtifactoryItemPath> imp
 
             Jenkins.get().checkPermission(Jenkins.ADMINISTER);
 
-            if (StringUtils.isBlank(serverUrl)
-                    || StringUtils.isBlank(storageCredentialId)
-                    || StringUtils.isBlank(repository)) {
+            if (serverUrl == null
+                    || storageCredentialId == null
+                    || repository == null
+                    || serverUrl.isBlank()
+                    || storageCredentialId.isBlank()
+                    || repository.isBlank()) {
                 return FormValidation.error("Fields required");
             }
 
