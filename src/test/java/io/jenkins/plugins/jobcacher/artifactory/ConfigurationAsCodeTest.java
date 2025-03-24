@@ -10,11 +10,11 @@ import jenkins.plugins.itemstorage.GlobalItemStorage;
 import org.junit.jupiter.api.Test;
 
 @WithJenkinsConfiguredWithCode
-public class ConfigurationAsCodeTest {
+class ConfigurationAsCodeTest {
 
     @Test
     @ConfiguredWithCode("configuration-as-code.yml")
-    public void shouldSupportConfigurationAsCode(JenkinsConfiguredWithCodeRule jenkinsRule) throws Exception {
+    void shouldSupportConfigurationAsCode(JenkinsConfiguredWithCodeRule jenkinsRule) {
         ArtifactoryItemStorage itemStorage =
                 (ArtifactoryItemStorage) GlobalItemStorage.get().getStorage();
         assertThat(itemStorage.getStorageCredentialId(), is("the-credentials-id"));
