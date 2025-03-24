@@ -6,19 +6,17 @@ import static org.hamcrest.Matchers.notNullValue;
 
 import jenkins.plugins.itemstorage.GlobalItemStorage;
 import jenkins.plugins.itemstorage.ItemStorage;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 import org.jvnet.hudson.test.recipes.LocalData;
 
-public class DataMigrationTest {
-
-    @Rule
-    public JenkinsRule jenkins = new JenkinsRule();
+@WithJenkins
+class DataMigrationTest {
 
     @Test
     @LocalData
-    public void shouldMigrateArtifactoryData() {
+    void shouldMigrateArtifactoryData(JenkinsRule jenkins) {
         ItemStorage<?> storage = GlobalItemStorage.get().getStorage();
         assertThat(storage, is(notNullValue()));
         ArtifactoryItemStorage artifactoryItemStorage = (ArtifactoryItemStorage) storage;

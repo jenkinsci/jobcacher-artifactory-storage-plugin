@@ -7,19 +7,19 @@ import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class ArtifactoryItemPathTest {
+class ArtifactoryItemPathTest {
 
     private ArtifactoryClient client;
     private ArtifactoryItemPath itemPath;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         client = mock(ArtifactoryClient.class);
         itemPath = new ArtifactoryItemPath(client, "fullName", "path");
     }
 
     @Test
-    public void testChild() throws IOException, InterruptedException {
+    void testChild() throws IOException, InterruptedException {
         ArtifactoryItemPath child = itemPath.child("childPath");
         assertNotNull(child);
         assertEquals("fullName", child.getFullName());
@@ -27,7 +27,7 @@ public class ArtifactoryItemPathTest {
     }
 
     @Test
-    public void testExists() throws IOException, InterruptedException {
+    void testExists() throws IOException, InterruptedException {
         doReturn(false).when(client).isFile(anyString());
         doReturn(true).when(client).isFile("fullName/path");
         assertTrue(itemPath.exists());
@@ -36,14 +36,14 @@ public class ArtifactoryItemPathTest {
     }
 
     @Test
-    public void testDelete() throws IOException, InterruptedException {
+    void testDelete() throws IOException, InterruptedException {
         itemPath.deleteRecursive();
         verify(client, times(1)).deleteArtifact("fullName/path");
         verifyNoMoreInteractions(client);
     }
 
     @Test
-    public void testGetFullName() {
+    void testGetFullName() {
         assertEquals("fullName", itemPath.getFullName());
     }
 }
